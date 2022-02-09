@@ -21,10 +21,25 @@ class UserRepository  extends BaseRepository implements UserRepositoryInterface
     $this->auth  = $auth;
   }
 
+  public function show($id)
+  {
+    return $this->table->selectDB("SELECT * 
+    FROM pessoa
+    INNER JOIN endereco on endereco.id = pessoa.endereco_id
+    INNER JOIN telefone on telefone.pessoa_id = pessoa.id
+    INNER JOIN estado on estado.id = endereco.estado_id
+    WHERE pessoa.id = {$id} order by pessoa.id desc");
+  }
+
 
   public function getAllUser()
   {
-    return $this->table->selectDB("SELECT * FROM pessoa");
+    return $this->table->selectDB("SELECT * 
+    FROM pessoa
+    INNER JOIN endereco on endereco.id = pessoa.endereco_id
+    INNER JOIN telefone on telefone.pessoa_id = pessoa.id
+    INNER JOIN estado on estado.id = endereco.estado_id
+    WHERE data_exclusao is NULL order by pessoa.id desc");
   }
 
 
@@ -35,6 +50,7 @@ class UserRepository  extends BaseRepository implements UserRepositoryInterface
 
   public function createUser($tabela, $data)
   {
+
     return  $this->ExeCreate($tabela, $data);
   }
 
@@ -85,5 +101,51 @@ class UserRepository  extends BaseRepository implements UserRepositoryInterface
       INNER JOIN telefone on telefone.pessoa_id = pessoa.id
       INNER JOIN estado on estado.id = endereco.estado_id
       WHERE pessoa.id = $id");
+  }
+
+  public function delLogic($id)
+  {
+    $res = $this->updateDB("
+        update pessoa 
+        JOIN endereco   ON  endereco.id = pessoa.endereco_id 
+        JOIN telefone ON pessoa.id = telefone.pessoa_id
+        JOIN estado  ON estado.id = endereco.estado_id
+        set    
+        pessoa.data_exclusao = now()      
+        WHERE  pessoa.id = $id");
+  }
+
+  public function updateUser($data, $id)
+  {
+
+    $nome =  $data['nome'];
+    $cpf = $data['cpf'];
+    $rg = $data['rg'];
+    $cep = $data['cep'];
+    $endereco  = $data['endereco'];
+    $numero  = $data['numero'];
+    $telefone = $data['telefone'];
+    @$uf = $data['uf'];
+
+
+    $res = $this->updateDB("
+    update pessoa 
+    JOIN endereco   ON  endereco.id = pessoa.endereco_id 
+    JOIN telefone ON pessoa.id = telefone.pessoa_id
+    JOIN estado  ON estado.id = endereco.estado_id
+    set 
+    pessoa.nome = '$nome',
+    pessoa.cpf = '$cpf',
+    pessoa.rg = '$rg',
+    pessoa.data_atualizacao = NOW(),
+    
+    endereco.cep = '$cep',
+    endereco.endereco = '$endereco',
+    endereco.numero = '$numero',
+    
+    telefone.telefone = '$telefone',
+    estado.uf = '$uf'
+    WHERE  pessoa.id = $id");
+    header('location:listar');
   }
 }

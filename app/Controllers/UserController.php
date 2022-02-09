@@ -16,10 +16,19 @@ class UserController
   }
 
 
-  public function getPessoa($id)
+  public function atualizar()
   {
-    return $this->repository->getField('pessoa', 'id', $id);
+    $id = $_REQUEST['id'];
+    view('cadastrar');
   }
+
+  public function show()
+  {
+    $id = $_REQUEST['id'];
+    return $res = $this->repository->show($id);
+  }
+
+
 
 
   public function getAllUser()
@@ -32,6 +41,7 @@ class UserController
     return  $estado_id = $this->repository->insertUF(@$data['UF']);
   }
 
+
   public function createAdress($data, $estado_id)
   {
     $endereco = ['estado_id' => $estado_id, 'cep' => @$data['CEP'], 'endereco' => @$data['endereco'], 'numero' => @$data['numero']];
@@ -41,15 +51,16 @@ class UserController
 
   public function createUser($data, $endereco_id)
   {
+    // 2022-02-09
+    //2022-02-09 00:52:27
     $pessoa = [
       'endereco_id' => $endereco_id,
       'nome' => @$data['nome'],
       'cpf' => @$data['cpf'],
       'rg' => @$data['rg'],
-      'data_nascimento' => @$data['data_nascimento'],
-      'data_cadastro' => date('m-d-Y'),
-      'data_atualizacao' => '',
-      'data_exclusao' => ''
+      'data_nascimento' =>  $data['data_nascimento'],
+      'data_cadastro' => date('Y-m-d H:i:s')
+
     ];
 
     return $pessoa_id =  $this->repository->createUser('pessoa', $pessoa);
@@ -64,46 +75,36 @@ class UserController
 
   public function store()
   {
-
     $data = $_REQUEST;
-
+    $data['data_nascimento'] = date('Y-m-d');
+    $data['data_cadastro'] = date('Y-m-d H:i:s');
+    $data['data_atualizacao'] = 'NULL';
+    $data['data_exclusao'] = 'NULL';
     $estado_id = $this->createUf($data);
     $endereco_id = $this->createAdress($data, $estado_id);
     $pessoa_id = $this->createUser($data, $endereco_id);
     $this->createTelefone($data, $pessoa_id);
+
+    header('location:listar');
   }
 
-
-  /**
-   * 
-
-     getPessoa
-     getTelefone
-     getEstado
-     getEndereco
-   
-
-
-   */
 
   public function getTelefone($id_pessoa)
   {
     return $this->repository->getField('telefone', 'pessoa_id', $id_pessoa);
   }
 
-  public function getEndereco($endereco_id)
-  {
-    return $this->repository->getField('endereco', 'id', $endereco_id);
-  }
-
-  public function getEstado($estado_id)
-  {
-    return $this->repository->getField('estado', 'id', $estado_id);
-  }
-
   public function deletar($id)
   {
     $id_pessoa = $_REQUEST['id'];
     $this->repository->deleteUser($id_pessoa);
+  }
+
+  public function updateUser($data)
+  {
+    $data = $_REQUEST;
+
+    @$id = $data['id'];
+    $this->repository->updateUser($data, $id);
   }
 }

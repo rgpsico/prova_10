@@ -8,4 +8,5 @@ interface UserRepositoryInterface
     public function getAllUser();
     public function deleteAll($tabela, $field, $id);
     public function createUser($tabela, $data);
+    public function show($id);
 }

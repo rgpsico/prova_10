@@ -8,9 +8,8 @@
         }
     ],
     
-    "require": {  
-  
-    
+    "require": {
+        "robmorgan/phinx": "^0.12.10"
     },
     "autoload": {
         "psr-4": {

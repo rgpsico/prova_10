@@ -55,6 +55,7 @@ class BaseRepository extends database
 
         $insert = $this->connect()->prepare($sql);
         $insert->execute($Dados);
+
         return  $this->conexao->lastInsertId();
     }
 
@@ -63,7 +64,7 @@ class BaseRepository extends database
     {
         $query = $this->connect()->prepare($sql);
         $query->execute($params);
-        $results = $query->rowCount() or die(print_r($query->errorInfo(), true));
+        $results = $query->rowCount();
 
         return $results;
     }
