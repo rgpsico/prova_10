@@ -46,5 +46,7 @@ CREATE TABLE telefone
 );
 
 
+INSERT INTO `testesql`.`pessoa` (`nome`, `cpf`) VALUES ('admin', 'admin');
+
 
 

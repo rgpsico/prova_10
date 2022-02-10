@@ -17,6 +17,7 @@
 
         <?php foreach ($res as $value) {
 
+
         ?>
           <tr class="user-<?= $value->id ?>">
             <th scope="row"><?= $value->id ?></th>

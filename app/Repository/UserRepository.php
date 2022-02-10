@@ -23,18 +23,19 @@ class UserRepository  extends BaseRepository implements UserRepositoryInterface
 
   public function show($id)
   {
+
     return $this->table->selectDB("SELECT * 
     FROM pessoa
     INNER JOIN endereco on endereco.id = pessoa.endereco_id
     INNER JOIN telefone on telefone.pessoa_id = pessoa.id
     INNER JOIN estado on estado.id = endereco.estado_id
-    WHERE pessoa.id = {$id} order by pessoa.id desc");
+    WHERE pessoa.id = {$id}");
   }
 
 
   public function getAllUser()
   {
-    return $this->table->selectDB("SELECT * 
+    return $this->table->selectDB("SELECT *, pessoa.id as id
     FROM pessoa
     INNER JOIN endereco on endereco.id = pessoa.endereco_id
     INNER JOIN telefone on telefone.pessoa_id = pessoa.id
@@ -125,7 +126,7 @@ class UserRepository  extends BaseRepository implements UserRepositoryInterface
     $endereco  = $data['endereco'];
     $numero  = $data['numero'];
     $telefone = $data['telefone'];
-    @$uf = $data['uf'];
+    @$uf = $data['UF'];
 
 
     $res = $this->updateDB("
