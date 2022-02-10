@@ -26,7 +26,7 @@
         "config/Services.php",
         "app/Helpers/Helpers.php",
         "Client/Response/Response.php",
-        "Core/Router.php",
+        "core/Router.php",
         "middleware/Authenticate.php"
       ]
     }
